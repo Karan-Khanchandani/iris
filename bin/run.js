@@ -10,7 +10,8 @@ const witClient = require("../server/witClient")(witToken);
 const slackToken = 'xoxb-331044129858-406541948145-I7KyN4DwVxfjoYbYVa1zIpJ8';
 const slackLogLevel = 'info';
 
-const rtm = slackClient.init(slackToken, slackLogLevel, witClient);
+const serviceRegistry = service.get('serviceRegistry');
+const rtm = slackClient.init(slackToken, slackLogLevel, witClient, serviceRegistry);
 rtm.start();
 
 slackClient.addAuthenticatedHandler(rtm, () => server.listen(3000));

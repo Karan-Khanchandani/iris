@@ -5,6 +5,7 @@ const {
 } = require('@slack/client');
 const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 let nlp = null;
+let registry = null;
 
 
 function handleOnAuthenticated(rtmStartData) {
@@ -31,7 +32,7 @@ function handleOnMessage(message) {
 
                 const intent = require('./intents/' + res.intent[0].value + 'Intent');
 
-                intent.process(res, function (err, response){
+                intent.process(res, registry, function (err, response){
                     if(err){
                         console.log(err.message);
                         return;
@@ -53,11 +54,12 @@ function handleOnMessage(message) {
 
 }
 
-module.exports.init = function slackClient(token, logLevel, nlpClient) {
+module.exports.init = function slackClient(token, logLevel, nlpClient, serviceRegistry) {
     rtm = new RTMClient(token, {
         logLevel: logLevel
     });
     nlp = nlpClient;
+    registry = serviceRegistry;
     addAuthenticatedHandler(rtm, handleOnAuthenticated);
     rtm.on('message', handleOnMessage);
     return rtm;
