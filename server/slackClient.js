@@ -1,5 +1,5 @@
 'use strict';
-
+let rtm = null;
 const { RTMClient } = require('@slack/client');
 const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 
@@ -11,10 +11,17 @@ function addAuthenticatedHandler(rtm, handler) {
     rtm.on('authenticated', handler);
 }
 
+function handleOnMessage(message){
+    console.log(message);
+    rtm.sendMessage('This is a test msg', 'C9QEDGP5F', function messageSend(){
+
+    } )
+}
 
 module.exports.init = function slackClient(token, logLevel) {
-    const rtm = new RTMClient(token, {logLevel: logLevel});
+    rtm = new RTMClient(token, {logLevel: logLevel});
     addAuthenticatedHandler(rtm, handleOnAuthenticated);
+    rtm.on('message', handleOnMessage);
     return rtm;
 }
 
