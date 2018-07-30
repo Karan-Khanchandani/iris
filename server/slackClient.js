@@ -29,11 +29,11 @@ function handleOnMessage(message) {
                     throw new Error('Could not extract intent.')
                 }
 
-                const intent = require('./intents' + res.intent[0].value + 'Intent');
+                const intent = require('./intents/' + res.intent[0].value + 'Intent');
 
                 intent.process(res, function (err, response){
-                    if(error){
-                        console.log(error.message);
+                    if(err){
+                        console.log(err.message);
                         return;
                     }
 
@@ -47,20 +47,6 @@ function handleOnMessage(message) {
                 return rtm.sendMessage("Sorry, I don't know what you're talking about.", 'C9QEDGP5F', function messageSend() {
 
                 });
-            }
-            if (!res.intent) {
-                return rtm.sendMessage('Sorry, I did not understand.', 'C9QEDGP5F', function messageSend() {
-
-                });
-            } else if (res.intent[0].value == 'time' && res.location) {
-                return rtm.sendMessage(`I don't yet know the time in ${res.location[0].value}`, 'C9QEDGP5F', function messageSend() {
-
-                });
-            } else {
-                console.log(res);
-                rtm.sendMessage('Sorry, I did not understand.', 'C9QEDGP5F', function messageSend() {
-
-                })
             }
         });
     }
